@@ -39,17 +39,32 @@ $config = json_decode(
 );
 
 try {
-	
+
 	$path_origin = $config["origin"];
-	
+
 	$dir_files = array_diff(openDirAndGetContentNames($config["origin"]), $config["excludes"]);
-	
+
 	foreach ($dir_files as $each_file) {
 		
-		$origin_file_contents = file_get_contents($config["origin"] . "/" . $each_file);
+		$target_full_path = $config["target"];
 		
+		$target_path_parts = explode("/", $each_file);
+		for ($i = 0; $i < count($target_path_parts) - 1; $i++) {
+			
+			$target_full_path .= "/" . $target_path_parts[$i];
+			if ( !is_dir($target_full_path) ) {
+				@mkdir( $target_full_path );
+			}	
+		}
+
+		$origin_file = fopen($config["origin"] . "/" . $each_file, "r");
 		$target_file = fopen($config["target"] . "/" . $each_file, "w");
-		fwrite($target_file, $origin_file_contents);
+
+		while( feof($origin_file) === false ) {
+			fwrite($target_file, fread($origin_file, 1024));
+		}
+
+		fclose($origin_file);
 		fclose($target_file);
 	}
 }
