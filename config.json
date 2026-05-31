@@ -1,6 +1,6 @@
 {
-  "origin": "",
-  "target": "",
+  "origin": "C:/Users/Lucas/Desktop/dir-transfer/origin",
+  "target": "C:/Users/Lucas/Desktop/dir-transfer/target",
 
-  "excludes": []
+  "excludes": ["files"]
 }
